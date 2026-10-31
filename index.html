@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>Un día especial · Sofía</title>
+<style>
+:root {
+  --site-primary: #c9a66b;
+  --site-on-primary: #17120a;
+  --site-secondary: #29231b;
+  --site-on-secondary: #f1e7d7;
+  --site-background: #090909;
+  --site-on-background: #f4eee5;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--site-background); }
+body { margin: 0; min-height: 100vh; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; width: 100%; border-radius: 0; position: relative; overflow: hidden; isolation: isolate; background-color: var(--site-background); color: var(--site-on-background); }
+#app::before { content: ""; position: absolute; inset: 0; z-index: -2; opacity: var(--site-decoration-opacity); background: radial-gradient(ellipse at 50% 20%, rgba(177,139,78,.17), transparent 48%), radial-gradient(ellipse at 15% 85%, rgba(112,83,43,.10), transparent 35%), linear-gradient(145deg,#0b0b0b,#11100e 55%,#080808); }
+.ambient { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; opacity: var(--site-decoration-opacity); }
+.ambient::before,.ambient::after { content:""; position:absolute; width: 1px; height: 1px; border-radius:50%; background:#f3d49a; box-shadow: 8vw 13vh 2px 1px #b78e50, 19vw 67vh 1px 1px #e7c98f, 32vw 28vh 2px 1px #c49a5c, 48vw 81vh 1px 1px #e8d5ae, 61vw 17vh 2px 1px #b78e50, 77vw 58vh 1px 1px #e7c98f, 89vw 31vh 2px 1px #c49a5c, 94vw 84vh 1px 1px #e8d5ae; animation: drift 12s ease-in-out infinite alternate; }
+.ambient::after { transform: translate(4vw,7vh) scale(.65); animation-delay: -5s; opacity:.7; }
+@keyframes drift { from { transform: translateY(-8px); } to { transform: translateY(13px); } }
+.shell { width: min(100% - 36px, 760px); margin: 0 auto; min-height: 100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: calc(42px * var(--site-spacing-scale)) 0 calc(34px * var(--site-spacing-scale)); }
+.eyebrow { color: var(--site-primary); text-transform:uppercase; letter-spacing:.32em; font-size:.66rem; font-weight:600; margin:0 0 24px; }
+h1,h2 { font-family:var(--site-font-heading); font-weight:400; }
+h1 { font-size:clamp(2.9rem, 10vw, 5.9rem); line-height:.98; letter-spacing:-.045em; margin:0; }
+.gold { color:var(--site-primary); font-style:italic; }
+.rule { width:58px; height:1px; background:linear-gradient(90deg,transparent,var(--site-primary),transparent); margin:28px auto; }
+.intro { max-width:480px; color:#c9c0b3; line-height:1.8; font-size:.96rem; margin:0 auto 34px; }
+.seal-wrap { perspective:900px; margin: 2px auto 22px; }
+.envelope { position:relative; width:min(270px,72vw); height:174px; border:1px solid rgba(201,166,107,.65); border-radius:5px; background:linear-gradient(145deg,#292117,#17130f); box-shadow:0 22px 65px rgba(0,0,0,.55), inset 0 0 35px rgba(201,166,107,.07); cursor:pointer; transition:transform .6s ease, box-shadow .4s ease; }
+.envelope:hover { transform:translateY(-5px); box-shadow:0 28px 75px rgba(0,0,0,.62),0 0 32px rgba(201,166,107,.12); }
+.envelope:focus-visible,button:focus-visible { outline:2px solid var(--site-primary); outline-offset:5px; }
+.envelope::before { content:""; position:absolute; inset:0; background:linear-gradient(145deg,transparent 49.5%,rgba(201,166,107,.45) 50%,transparent 50.6%),linear-gradient(35deg,transparent 49.5%,rgba(201,166,107,.32) 50%,transparent 50.6%); }
+.flap { position:absolute; inset:0 0 auto; height:52%; transform-origin:top; background:linear-gradient(155deg,#3a2d1d,#211a12); clip-path:polygon(0 0,100% 0,50% 100%); border-top:1px solid rgba(201,166,107,.55); transition:transform .85s cubic-bezier(.2,.75,.2,1); z-index:2; }
+.seal { position:absolute; z-index:3; left:50%; top:52%; transform:translate(-50%,-50%); width:43px; height:43px; border-radius:50%; display:grid; place-items:center; background:radial-gradient(circle at 35% 30%,#e6c98e,#9b7138 72%); color:#21170b; font-family:Georgia,serif; font-size:1.2rem; box-shadow:0 3px 12px #0008; transition:opacity .3s ease; }
+.envelope.open .flap { transform:rotateX(180deg); }
+.envelope.open .seal { opacity:0; }
+.envelope.open { transform:translateY(8px); }
+.tap-hint { color:#a99d8b; font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; margin:0 0 28px; }
+.message { width:min(100%,560px); max-height:0; opacity:0; overflow:hidden; transform:translateY(14px); transition:max-height 1s ease, opacity .8s ease, transform .8s ease; }
+.message.visible { max-height:620px; opacity:1; transform:translateY(0); }
+.message-card { border:1px solid rgba(201,166,107,.3); background:linear-gradient(135deg,rgba(39,32,23,.84),rgba(17,16,14,.9)); padding:clamp(25px,6vw,42px); border-radius:4px; box-shadow:0 20px 60px #0005; }
+.message h2 { color:var(--site-primary); font-size:clamp(1.8rem,6vw,2.5rem); margin:0 0 18px; }
+.message p { color:#e0d8cc; line-height:1.9; font-size:.96rem; margin:0 0 15px; }
+.signature { margin-top:26px!important; color:var(--site-primary)!important; font-family:var(--site-font-heading); font-style:italic; font-size:1.3rem!important; }
+.footer { color:#766d60; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; margin-top:36px; }
+.spark { position:fixed; width:5px; height:5px; border-radius:50%; background:#e8c98d; pointer-events:none; animation:burst 1.5s ease-out forwards; box-shadow:0 0 12px #e8c98d; }
+@keyframes burst { 0% { opacity:1; transform:translate(0,0) scale(1); } 100% { opacity:0; transform:translate(var(--x),var(--y)) scale(.1); } }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }
+@media (max-width:420px) { .shell { width:calc(100% - 28px); } .intro { font-size:.9rem; } }
+</style>
+</head>
+<body>
+<main id="app">
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="shell">
+    <p class="eyebrow">5 · noviembre · un día para celebrar</p>
+    <h1>For you,<br><span class="gold">Sofía.</span></h1>
+    <div class="rule"></div>
+    <p class="intro">Hay personas que llegan sin hacer demasiado ruido y, poco a poco, consiguen hacer especiales los momentos más sencillos. Hoy es tu día, y merece algo diferente.</p>
+    <div class="seal-wrap">
+      <button class="envelope" id="envelope" type="button" aria-label="Abrir tu felicitación">
+        <span class="flap" aria-hidden="true"></span>
+        <span class="seal" aria-hidden="true">S</span>
+      </button>
+    </div>
+    <p class="tap-hint" id="hint">Toca el sobre para descubrir tu sorpresa</p>
+    <section class="message" id="message" aria-live="polite">
+      <div class="message-card">
+        <h2>Feliz cumpleaños ✨</h2>
+        <p>Sofi, deseo que este nuevo año te regale muchísimos motivos para sonreír, planes bonitos, aventuras inesperadas y momentos de esos que se quedan guardados.</p>
+        <p>Que sigas teniendo esa forma tan tuya de sacar una sonrisa y de hacer que hasta los momentos más sencillos tengan algo especial.</p>
+        <p>Y que nunca falten las risas… incluso cuando recordemos que al principio no nos caíamos precisamente bien. 😄</p>
+        <p>Disfruta muchísimo de tu día, celebra, ríe y déjate sorprender. Te deseo de corazón un año lleno de cosas bonitas.</p>
+        <p class="signature">Un abrazo grande ❤️</p>
+      </div>
+    </section>
+    <p class="footer">A little something, made just for you</p>
+  </div>
+</main>
+<script>
+const envelope = document.getElementById('envelope');
+const message = document.getElementById('message');
+const hint = document.getElementById('hint');
+let opened = false;
+function celebrate() {
+  const rect = envelope.getBoundingClientRect();
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('span');
+    particle.className = 'spark';
+    particle.style.left = `${rect.left + rect.width / 2}px`;
+    particle.style.top = `${rect.top + rect.height / 2}px`;
+    particle.style.setProperty('--x', `${(Math.random() - .5) * 260}px`);
+    particle.style.setProperty('--y', `${(Math.random() - .5) * 220}px`);
+    document.body.appendChild(particle);
+    particle.addEventListener('animationend', () => particle.remove(), { once:true });
+  }
+}
+envelope.addEventListener('click', () => {
+  if (opened) return;
+  opened = true;
+  envelope.classList.add('open');
+  hint.textContent = 'Una pequeña sorpresa para ti';
+  window.setTimeout(() => {
+    message.classList.add('visible');
+    celebrate();
+  }, 450);
+});
+</script>
+</body>
+</html>
